@@ -4,7 +4,7 @@
  * Returns a normalised object: { temp, conditionCode, conditionMain, cityName }
  */
 
-const API_KEY = 'db9f324fb788ecb797562bee26b14b5c';
+import { API_KEY } from './config.local.js';
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
 /**
