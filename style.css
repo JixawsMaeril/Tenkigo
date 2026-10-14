@@ -1117,12 +1117,6 @@ body {
   opacity: 1;
 }
 
-#footer {
-  position: relative;
-  margin-top: 1rem;
-  padding: 1.5rem 1rem;
-}
-
 @keyframes landing-rise {
   from {
     opacity: 0;
@@ -1232,7 +1226,8 @@ body {
 }
 
 #weather-board {
-  padding-top: 2.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
 }
 
 @media (max-width: 760px) {
