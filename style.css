@@ -1,0 +1,647 @@
+/* ============================================================
+   TENKIGO WEATHER BOARD — DARK MODERN EDITION
+   Glassmorphism · Dark Slate · Neon Accents · Floating Panel
+   ============================================================ */
+
+/* -----------------------------------------------------------
+   1. CSS VARIABLES & DESIGN TOKENS
+   ----------------------------------------------------------- */
+:root {
+  /* Base Dark */
+  --bg-dark: #0F172A;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Typography Colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+
+  /* Typography Families */
+  --font-kanji: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Spacing scale */
+  --sp-2xs: 0.25rem;
+  --sp-xs: 0.5rem;
+  --sp-sm: 1rem;
+  --sp-md: 1.5rem;
+  --sp-lg: 2.5rem;
+  --sp-xl: 4rem;
+
+  /* Theme accent defaults (overridden per data-theme) */
+  --theme-accent: #06B6D4;
+  --glow-soft: rgba(6, 182, 212, 0.12);
+  --glow-medium: rgba(6, 182, 212, 0.28);
+  --glow-ambient: rgba(6, 182, 212, 0.05);
+  --season-glow: rgba(251, 113, 133, 0.12);
+}
+
+
+/* -----------------------------------------------------------
+   2. RESET & BASE
+   ----------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem var(--sp-md) 3rem;
+  background-color: var(--bg-dark);
+  overflow-x: hidden;
+  position: relative;
+  isolation: isolate;
+  transition: background-color 1.2s ease-in-out;
+}
+
+/* Slow ambient light blends the current weather with the current season. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(56px);
+  transition: background 1.2s ease-in-out;
+}
+
+body::before {
+  background:
+    radial-gradient(ellipse at 25% 32%, var(--glow-ambient) 0, transparent 38%),
+    radial-gradient(ellipse at 77% 68%, var(--season-glow) 0, transparent 34%);
+  animation: ambient-drift 28s ease-in-out infinite alternate;
+}
+
+body::after {
+  background: radial-gradient(ellipse at 52% 48%, var(--glow-ambient) 0, transparent 46%);
+  opacity: 0.75;
+  animation: ambient-drift 36s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes ambient-drift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+  to { transform: translate3d(1.5%, 1%, 0) scale(1.08); }
+}
+
+
+/* -----------------------------------------------------------
+   3. WEATHER THEME ACCENTS
+   Themes no longer change the body background — the body
+   stays dark. Instead, each theme sets accent-colored glow
+   variables that "bleed through" the glass card.
+   ----------------------------------------------------------- */
+body[data-theme="clear"] {
+  --bg-dark: #182c40;
+  --theme-accent: #06B6D4;
+  --glow-soft: rgba(6, 182, 212, 0.16);
+  --glow-medium: rgba(6, 182, 212, 0.32);
+  --glow-ambient: rgba(6, 182, 212, 0.20);
+}
+
+body[data-theme="rain"] {
+  --bg-dark: #241d3d;
+  --theme-accent: #8B5CF6;
+  --glow-soft: rgba(139, 92, 246, 0.16);
+  --glow-medium: rgba(139, 92, 246, 0.32);
+  --glow-ambient: rgba(139, 92, 246, 0.20);
+}
+
+body[data-theme="cloudy"] {
+  --bg-dark: #263141;
+  --theme-accent: #64748B;
+  --glow-soft: rgba(100, 116, 139, 0.18);
+  --glow-medium: rgba(100, 116, 139, 0.32);
+  --glow-ambient: rgba(100, 116, 139, 0.20);
+}
+
+body[data-theme="snow"] {
+  --bg-dark: #243747;
+  --theme-accent: #E2E8F0;
+  --glow-soft: rgba(226, 232, 240, 0.16);
+  --glow-medium: rgba(226, 232, 240, 0.30);
+  --glow-ambient: rgba(226, 232, 240, 0.18);
+}
+
+body[data-theme="thunder"] {
+  --bg-dark: #352432;
+  --theme-accent: #F59E0B;
+  --glow-soft: rgba(245, 158, 11, 0.16);
+  --glow-medium: rgba(245, 158, 11, 0.32);
+  --glow-ambient: rgba(245, 158, 11, 0.20);
+}
+
+body[data-theme="mist"] {
+  --bg-dark: #1e3533;
+  --theme-accent: #34D399;
+  --glow-soft: rgba(52, 211, 153, 0.16);
+  --glow-medium: rgba(52, 211, 153, 0.32);
+  --glow-ambient: rgba(52, 211, 153, 0.20);
+}
+
+/* Seasonal tint is layered with the weather accent above. */
+body[data-season="spring"] { --season-glow: rgba(251, 113, 133, 0.14); }
+body[data-season="summer"] { --season-glow: rgba(45, 212, 191, 0.14); }
+body[data-season="autumn"] { --season-glow: rgba(245, 158, 11, 0.14); }
+body[data-season="winter"] { --season-glow: rgba(147, 197, 253, 0.14); }
+
+
+/* -----------------------------------------------------------
+   4. HEADER — fixed top bar
+   ----------------------------------------------------------- */
+#header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-sm) var(--sp-md);
+  z-index: 10;
+}
+
+#app-title {
+  font-family: var(--font-kanji);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+}
+
+
+/* -----------------------------------------------------------
+   5. SEARCH FORM — glass style
+   ----------------------------------------------------------- */
+#search-form {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  margin-top: var(--sp-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease;
+}
+
+#search-form:focus-within {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+#city-input {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 300;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+#city-input::placeholder {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+#search-btn {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+#search-btn:hover {
+  color: var(--text-primary);
+}
+
+
+/* -----------------------------------------------------------
+   6. POSTCARD — Glassmorphism Floating Panel
+   ----------------------------------------------------------- */
+#postcard {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: var(--sp-xl) var(--sp-lg) var(--sp-lg);
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2xs);
+  position: relative;
+
+  /* Subtle depth — soft, spread glow behind the glass */
+  box-shadow:
+    0 4px 30px var(--glow-soft),
+    0 0 80px var(--glow-ambient);
+
+  /* Fade-in on load */
+  opacity: 0;
+  transition:
+    opacity 0.6s ease,
+    box-shadow 0.8s ease-in-out,
+    border-color 0.3s ease;
+}
+
+#postcard.visible {
+  opacity: 1;
+}
+
+#postcard:hover {
+  border-color: rgba(255, 255, 255, 0.13);
+}
+
+
+/* -----------------------------------------------------------
+   7. KANJI DISPLAY — the hero element
+   ----------------------------------------------------------- */
+#kanji-display {
+  cursor: pointer;
+  padding: var(--sp-sm) var(--sp-md);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+#kanji-display:hover {
+  opacity: 0.9;
+}
+
+/* Scale-down click feedback per StyleGuide §4 */
+#kanji-display:active {
+  transform: scale(0.98);
+}
+
+#kanji-display:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+  outline-offset: 8px;
+  border-radius: 4px;
+}
+
+#kanji-char {
+  font-family: var(--font-kanji);
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.15;
+  display: block;
+  color: var(--text-primary);
+  transition: text-shadow 0.4s ease;
+}
+
+/* Neon glow on hover — colour matches current weather theme */
+#kanji-display:hover #kanji-char {
+  text-shadow:
+    0 0 20px var(--glow-medium),
+    0 0 60px var(--glow-soft);
+}
+
+/* Tiny "click to copy" hint */
+#copy-hint {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: var(--sp-2xs);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#kanji-display:hover #copy-hint {
+  opacity: 1;
+}
+
+
+/* -----------------------------------------------------------
+   8. ROMAJI & MEANING
+   ----------------------------------------------------------- */
+#romaji {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: var(--sp-xs);
+}
+
+#meaning {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-tertiary);
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+
+/* -----------------------------------------------------------
+   9. HERO WEATHER — temperature & city
+   ----------------------------------------------------------- */
+#hero-weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-bottom: var(--sp-md);
+  margin-bottom: var(--sp-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-sans);
+}
+
+#temperature {
+  font-size: clamp(4.5rem, 16vw, 7.5rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+#city-name {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Season label — bottom-right */
+#season-label {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: var(--sp-xs);
+  align-self: flex-end;
+}
+
+
+/* -----------------------------------------------------------
+   10. COPY TOAST — glass style
+   ----------------------------------------------------------- */
+#copy-toast {
+  position: fixed;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(0.75rem);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.5rem 1.5rem;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+#copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* -----------------------------------------------------------
+   11. LOADING OVERLAY — dark
+   ----------------------------------------------------------- */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-dark);
+  z-index: 50;
+  transition: opacity 0.6s ease;
+}
+
+#loading-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-text {
+  font-family: var(--font-kanji);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: 0.25em;
+}
+
+#loading-sub {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--text-tertiary);
+  letter-spacing: 0.12em;
+  margin-top: var(--sp-xs);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    transition: none;
+  }
+}
+
+
+/* -----------------------------------------------------------
+   12. ERROR MESSAGE — glass style
+   ----------------------------------------------------------- */
+#error-msg {
+  position: fixed;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-0.5rem);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(255, 0, 60, 0.15);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.4rem 1.2rem;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+
+#error-msg.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* -----------------------------------------------------------
+   13. FOOTER
+   ----------------------------------------------------------- */
+#footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: var(--sp-xs) var(--sp-sm);
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: var(--text-tertiary);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+
+/* -----------------------------------------------------------
+   14. RESPONSIVE — ≤ 600px
+   ----------------------------------------------------------- */
+@media (max-width: 600px) {
+  body {
+    padding: 5rem var(--sp-sm) 2.5rem;
+  }
+
+  #header {
+    flex-direction: column;
+    gap: var(--sp-xs);
+    align-items: stretch;
+    padding: var(--sp-xs) var(--sp-sm);
+  }
+
+  #header > #app-title {
+    text-align: center;
+  }
+
+
+
+  #postcard {
+    padding: var(--sp-lg) var(--sp-md) var(--sp-md);
+    border-radius: 12px;
+  }
+
+  #kanji-char {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  #meaning {
+    max-width: 260px;
+  }
+
+  #city-name {
+    font-size: 1rem;
+  }
+
+  #temperature {
+    font-size: clamp(4rem, 18vw, 6rem);
+  }
+}
+
+/* Compact layout: keep the card and footer within the viewport */
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 3.5rem var(--sp-md) 2rem;
+}
+
+#postcard {
+  padding: 2rem 2.5rem 1.5rem;
+  gap: 0.2rem;
+}
+
+#temperature {
+  font-size: clamp(3.5rem, 12vw, 6rem);
+}
+
+#hero-weather {
+  padding-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+#kanji-display {
+  padding: 0.5rem 1rem;
+}
+
+#kanji-char {
+  font-size: clamp(2.75rem, 8vw, 4rem);
+}
+
+#romaji {
+  margin-top: 0.25rem;
+}
+
+#season-label {
+  margin-top: 0.25rem;
+}
+
+#search-form {
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 4rem 1rem 2rem;
+  }
+
+  #postcard {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  #temperature {
+    font-size: clamp(3.5rem, 18vw, 5rem);
+  }
+
+  #kanji-char {
+    font-size: clamp(2.5rem, 12vw, 3.5rem);
+  }
+}
