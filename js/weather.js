@@ -41,10 +41,11 @@ function normalise(data) {
     conditionCode: data.weather[0].id,
     conditionMain: data.weather[0].main,
     cityName: data.name,
-    countryName: data.sys.country,
+    countryName: data.sys?.country || '',
 
     // Waktu lokal kota berdasarkan data API
     latitude: data.coord.lat,
+    longitude: data.coord.lon,
     localMonth: new Date(
       (data.dt + data.timezone) * 1000
     ).getUTCMonth() + 1,

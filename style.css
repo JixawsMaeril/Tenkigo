@@ -153,6 +153,26 @@ body[data-theme="mist"] {
   --glow-ambient: rgba(52, 211, 153, 0.20);
 }
 
+body[data-season="wet"] {
+  --season-glow: rgba(59, 130, 246, 0.18);
+}
+
+body[data-season="dry"] {
+  --season-glow: rgba(245, 158, 11, 0.18);
+}
+
+body[data-season="transition"] {
+  --season-glow: rgba(45, 212, 191, 0.16);
+}
+
+body[data-season="equatorial"] {
+  --season-glow: rgba(52, 211, 153, 0.18);
+}
+
+body[data-season="arid"] {
+  --season-glow: rgba(251, 146, 60, 0.18);
+}
+
 /* Seasonal tint is layered with the weather accent above. */
 body[data-season="spring"] { --season-glow: rgba(251, 113, 133, 0.14); }
 body[data-season="summer"] { --season-glow: rgba(45, 212, 191, 0.14); }
@@ -397,6 +417,17 @@ body[data-season="winter"] { --season-glow: rgba(147, 197, 253, 0.14); }
   color: var(--text-secondary);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+#country-name {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.95;
 }
 
 /* Season label — bottom-right */
@@ -644,4 +675,27 @@ body {
   #kanji-char {
     font-size: clamp(2.5rem, 12vw, 3.5rem);
   }
+}
+
+#season-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+#local-climate-label {
+  color: var(--text-tertiary);
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+#season-info #season-label {
+  margin-top: 0;
+  align-self: auto;
+  font-size: 0.58rem;
+  opacity: 0.7;
 }

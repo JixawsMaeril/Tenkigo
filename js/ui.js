@@ -20,11 +20,11 @@ const els = {
   meaning:    () => $('meaning'),
   cityName:   () => $('city-name'),
   temperature:() => $('temperature'),
-  seasonLabel:() => $('season-label'),
   toast:      () => $('copy-toast'),
   errorMsg:   () => $('error-msg'),
   overlay:    () => $('loading-overlay'),
   countryName:() => $('country-name'),
+  localClimateLabel: () => $('local-climate-label'),
 };
 
 // ──────────────────────────────────────────────
@@ -47,35 +47,37 @@ function getTheme(code) {
 // ──────────────────────────────────────────────
 
 /** Render the Tenkigo postcard content. */
-export function renderPostcard(tenkigo) {
-  els.kanjiChar().textContent   = tenkigo.kanji;
-  els.romaji().textContent      = tenkigo.romaji;
-  els.meaning().textContent     = tenkigo.meaning;
-  els.seasonLabel().textContent = tenkigo.seasonLabel || '';
+export function renderPostcard(tenkigo, localClimateLabel = '') {
+  els.kanjiChar().textContent = tenkigo.kanji;
+  els.romaji().textContent = tenkigo.romaji;
+  els.meaning().textContent = tenkigo.meaning;
+  els.localClimateLabel().textContent = localClimateLabel;
 }
 
 /** Render the weather strip (city + temperature). */
 export function renderWeather(weather) {
   els.cityName().textContent    = weather.cityName;
   els.temperature().textContent = `${weather.temp}°`;
+  const code = weather.countryName?.trim();
+  let country = '';
+
+  if (code) {
+    try {
+      country = new Intl.DisplayNames(['en'], { type: 'region' })
+        .of(code) || code;
+    } catch {
+      country = code;
+    }
+  }
+
+  els.countryName().textContent = country;
 }
 
 /** Apply the weather theme to the body background. */
-export function applyTheme(conditionCode, month, latitude) {
+export function applyTheme(conditionCode, seasonKey) {
   const theme = getTheme(conditionCode);
-
-  // Balik musim kalender untuk kota di belahan bumi selatan
-  const seasonMonth = latitude < 0
-    ? ((month + 5) % 12) + 1
-    : month;
-
-  const season = seasonMonth >= 3 && seasonMonth <= 5 ? 'spring'
-    : seasonMonth >= 6 && seasonMonth <= 8 ? 'summer'
-    : seasonMonth >= 9 && seasonMonth <= 11 ? 'autumn'
-    : 'winter';
-
   els.body().dataset.theme = theme;
-  els.body().dataset.season = season;
+  els.body().dataset.season = seasonKey;
 }
 
 /** Fade the postcard in. */

@@ -9,6 +9,7 @@
  */
 
 import { fetchWeather, fetchWeatherByCity } from './js/weather.js';
+import { getLocalSeason } from './js/climate.js';
 import { getTenkigo } from './js/tenkigo.js';
 import {
   renderPostcard,
@@ -39,7 +40,7 @@ async function init() {
         });
       });
       const weather = await fetchWeather(pos.coords.latitude, pos.coords.longitude);
-      present(weather);
+      await present(weather);
     } catch (geoErr) {
       console.warn('Geolocation unavailable:', geoErr.message);
       await fallbackToDefault();
@@ -52,7 +53,7 @@ async function init() {
 async function fallbackToDefault() {
   try {
     const weather = await fetchWeatherByCity('Tokyo');
-    present(weather);
+    await present(weather);
   } catch {
     presentError('Could not reach the weather service');
   }
@@ -62,12 +63,19 @@ async function fallbackToDefault() {
 //  PRESENT DATA
 // ──────────────────────────────────────────────
 
-function present(weather) {
+async function present(weather) {
   const month = weather.localMonth;
-  const tenkigo = getTenkigo(month, weather.conditionCode);
+  const tenkigo = getTenkigo(weather.conditionCode);;
+  const localSeason = await getLocalSeason(
+    month,
+    weather.latitude,
+    weather.longitude
+  );
 
-  applyTheme(weather.conditionCode, month, weather.latitude);
-  renderPostcard(tenkigo);
+  applyTheme(weather.conditionCode, localSeason.key);
+
+  renderPostcard(tenkigo, localSeason.label);
+
   renderWeather(weather);
   hideLoading();
   showPostcard();
@@ -102,7 +110,7 @@ function setupSearch() {
       // Fade out, fetch, fade in
       await hidePostcard();
       const weather = await fetchWeatherByCity(city);
-      present(weather);
+      await present(weather);
       input.value = '';
       input.blur();
     } catch {
