@@ -1,68 +1,138 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Tenkigo — Poetic Japanese weather words that reflect the season and sky above you.">
+  <meta
+    name="description"
+    content="Tenkigo connects weather around the world with Japanese weather vocabulary."
+  >
   <meta name="theme-color" content="#0F172A">
   <title>Tenkigo — 天気語</title>
 
-  <!-- Favicon (天 character) -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>天</text></svg>">
+  <link
+    rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>天</text></svg>"
+  >
 
-  <!-- Google Fonts: Noto Serif JP (Kanji) · Inter (UI) · Caveat (Handwriting) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+JP:wght@400;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body id="weather-body" data-theme="clear">
+  <main id="page-content">
+    <section id="landing" aria-labelledby="landing-title">
+      <div class="landing-copy">
+        <p class="landing-eyebrow">
+          <span class="eyebrow-line" aria-hidden="true"></span>
+          WEATHER, IN ANOTHER LANGUAGE
+        </p>
 
-  <!-- ===== HEADER ===== -->
-  <header id="header">
-    <span id="app-title">天気語 | Tenkigo</span>
-  </header>
+        <h1 id="landing-title">
+          The sky has<br>
+          <span>its own language.</span>
+        </h1>
 
-  <!-- ===== MAIN POSTCARD ===== -->
-  <main id="postcard">
-    <div id="hero-weather">
-      <span id="temperature">—</span>
-      <span id="city-name">—</span>
-      <span id="country-name">—</span>
-    </div>
+        <p class="landing-japanese" lang="ja">
+          今日の空に、ひとつの言葉を。
+        </p>
 
-    <div id="kanji-display" role="button" tabindex="0" aria-label="Click to copy Kanji" title="Click to copy">
-      <span id="kanji-char">—</span>
-      <span id="copy-hint">click to copy</span>
-    </div>
+        <p class="landing-description">
+          Tenkigo pairs the weather in your city with Japanese words for
+          the sky and atmosphere—turning each forecast into a small
+          language discovery.
+        </p>
 
-    <p id="romaji">...</p>
-    <p id="meaning">...</p>
+        <a class="explore-button" href="#weather-board">
+          Explore the Weather
+          <span aria-hidden="true">→</span>
+        </a>
 
-    <div id="season-info">
-      <span id="local-climate-label"></span>
-    </div>
+        <p class="landing-note">
+          Local weather. Japanese words. One quiet moment.
+        </p>
+      </div>
 
-    <form id="search-form" autocomplete="off">
-      <input
-        id="city-input"
-        type="text"
-        placeholder="Search city..."
-        aria-label="Search for a city"
-      >
-      <button id="search-btn" type="submit" aria-label="Search">→</button>
-    </form>
+      <aside class="weather-teaser" aria-label="Sample weather card preview">
+        <div class="teaser-sky" aria-hidden="true">
+          <span class="teaser-sun"></span>
+          <span class="teaser-cloud teaser-cloud-one"></span>
+          <span class="teaser-cloud teaser-cloud-two"></span>
+        </div>
+
+        <div class="teaser-content">
+          <p class="teaser-caption">CONCEPT PREVIEW · SAMPLE ONLY</p>
+
+          <div class="teaser-location">
+            <span>27°</span>
+            <span>TOKYO</span>
+          </div>
+
+          <div class="teaser-divider"></div>
+
+          <p class="teaser-kanji" lang="ja">雲間</p>
+          <p class="teaser-romaji">KUMOMA</p>
+          <p class="teaser-meaning">An opening between clouds</p>
+        </div>
+
+        <span class="teaser-stamp" lang="ja" aria-hidden="true">空</span>
+      </aside>
+    </section>
+
+    <section id="weather-board" aria-labelledby="weather-board-title">
+      <div class="board-heading">
+        <p class="board-eyebrow">YOUR CITY, RIGHT NOW</p>
+        <h2 id="weather-board-title">Weather board</h2>
+        <p>Search for a city to see its weather and a word for the sky.</p>
+      </div>
+
+      <article id="postcard">
+        <div id="hero-weather">
+          <span id="temperature">—</span>
+          <span id="city-name">—</span>
+          <span id="country-name">—</span>
+        </div>
+
+        <div
+          id="kanji-display"
+          role="button"
+          tabindex="0"
+          aria-label="Click to copy Kanji"
+          title="Click to copy"
+        >
+          <span id="kanji-char">—</span>
+          <span id="copy-hint">click to copy</span>
+        </div>
+
+        <p id="romaji">...</p>
+        <p id="meaning">...</p>
+
+        <div id="season-info">
+          <span id="local-climate-label"></span>
+        </div>
+
+        <form id="search-form" autocomplete="off">
+          <input
+            id="city-input"
+            type="text"
+            placeholder="Search city..."
+            aria-label="Search for a city"
+          >
+          <button id="search-btn" type="submit" aria-label="Search">→</button>
+        </form>
+      </article>
+    </section>
   </main>
 
-  <!-- ===== COPY TOAST ===== -->
   <div id="copy-toast" aria-live="polite">コピーしました</div>
-
-  <!-- ===== ERROR MESSAGE ===== -->
   <div id="error-msg" aria-live="polite"></div>
 
-  <!-- ===== LOADING OVERLAY ===== -->
   <div id="loading-overlay">
     <span id="loading-text">天気語</span>
     <span id="loading-sub">reading the weather…</span>
@@ -76,12 +146,6 @@
       <span></span>
     </div>
   </div>
-
-  <!-- ===== FOOTER ===== -->
-  <footer id="footer">
-    <span>Tenkigo Weather Board</span>
-  </footer>
-
   <script type="module" src="app.js"></script>
 </body>
 </html>
