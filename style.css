@@ -512,6 +512,41 @@ body[data-season="winter"] { --season-glow: rgba(147, 197, 253, 0.14); }
   animation: pulse 2.2s ease-in-out infinite;
 }
 
+#loading-progress {
+  width: min(220px, 55vw);
+  height: 3px;
+  margin-top: 1.25rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#loading-progress span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--text-primary);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+  animation: loading-slide 1.25s ease-in-out infinite;
+}
+
+@keyframes loading-slide {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(270%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #loading-progress span {
+    animation-duration: 3s;
+  }
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.25; }

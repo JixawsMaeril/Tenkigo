@@ -17,6 +17,7 @@ import {
   applyTheme,
   showPostcard,
   hidePostcard,
+  showLoading,
   hideLoading,
   setupCopyHandler,
   showError,
@@ -107,14 +108,16 @@ function setupSearch() {
     if (!city) return;
 
     try {
-      // Fade out, fetch, fade in
+      showLoading();
       await hidePostcard();
+
       const weather = await fetchWeatherByCity(city);
       await present(weather);
       input.value = '';
       input.blur();
     } catch {
-      showPostcard(); // restore the card if it was hidden
+      hideLoading();
+      showPostcard();
       showError('City not found — please try again');
     }
   });
